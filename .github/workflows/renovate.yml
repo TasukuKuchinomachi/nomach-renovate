@@ -60,3 +60,4 @@ jobs:
         env:
           LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
           RENOVATE_DRY_RUN: ${{ inputs.dryRun || 'null' }}
+          RENOVATE_NPM_REGISTRY_TOKEN: ${{ steps.app-token.outputs.token }}

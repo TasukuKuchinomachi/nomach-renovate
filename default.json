@@ -38,6 +38,11 @@
   },
   "packageRules": [
     {
+      "description": "GitHub Packages (個人 scope) は npm.pkg.github.com を参照",
+      "matchPackageNames": ["/^@tasukukuchinomachi//"],
+      "registryUrls": ["https://npm.pkg.github.com"]
+    },
+    {
       "description": "devDependencies の patch/minor はまとめる",
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["patch", "minor"],
