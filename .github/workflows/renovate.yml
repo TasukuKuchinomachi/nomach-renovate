@@ -48,6 +48,11 @@ jobs:
           restore-keys: |
             renovate-cache-${{ github.repository }}-
 
+      - name: Make /tmp/renovate writable by docker user
+        run: |
+          mkdir -p /tmp/renovate/cache /tmp/renovate/repos
+          chmod -R 0777 /tmp/renovate
+
       - uses: renovatebot/github-action@v46.1.10
         with:
           configurationFile: config.js
