@@ -1,0 +1,57 @@
+name: Renovate
+
+on:
+  schedule:
+    # 毎日 9:00 JST (00:00 UTC)
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Renovate のログレベル'
+        type: choice
+        default: info
+        options: [info, debug]
+      dryRun:
+        description: 'dry-run モード'
+        type: choice
+        default: 'null'
+        options: ['null', extract, lookup, full]
+
+permissions: {}
+
+concurrency:
+  group: renovate-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.RENOVATE_APP_ID }}
+          private-key: ${{ secrets.RENOVATE_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
+      - uses: actions/cache@v4
+        with:
+          path: /tmp/renovate/cache
+          key: renovate-cache-${{ github.repository }}-${{ github.run_id }}
+          restore-keys: |
+            renovate-cache-${{ github.repository }}-
+
+      - uses: renovatebot/github-action@v41
+        with:
+          configurationFile: config.js
+          token: ${{ steps.app-token.outputs.token }}
+        env:
+          LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
+          RENOVATE_DRY_RUN: ${{ inputs.dryRun || 'null' }}
