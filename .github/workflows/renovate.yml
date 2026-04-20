@@ -48,7 +48,7 @@ jobs:
           restore-keys: |
             renovate-cache-${{ github.repository }}-
 
-      - uses: renovatebot/github-action@v41
+      - uses: renovatebot/github-action@v46.1.10
         with:
           configurationFile: config.js
           token: ${{ steps.app-token.outputs.token }}
