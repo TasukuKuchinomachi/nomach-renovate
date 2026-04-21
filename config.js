@@ -14,21 +14,18 @@ module.exports = {
   gitAuthor: 'nomach-renovate[bot] <nomach-renovate[bot]@users.noreply.github.com>',
   cacheDir: '/tmp/renovate/cache',
   baseDir: '/tmp/renovate',
-  // onboarding前のリポでも scoped package を正しく解決できるよう
-  // 「@tasukukuchinomachi/* は GitHub Packages」を global に効かせる
   packageRules: [
     {
       matchPackageNames: ['/^@tasukukuchinomachi//'],
       registryUrls: ['https://npm.pkg.github.com'],
     },
   ],
-  hostRules: npmRegistryToken
-    ? [
-        {
-          hostType: 'npm',
-          matchHost: 'npm.pkg.github.com',
-          token: npmRegistryToken,
-        },
-      ]
-    : [],
+  hostRules: [
+    {
+      hostType: 'npm',
+      matchHost: 'https://npm.pkg.github.com',
+      authType: 'Bearer',
+      token: npmRegistryToken,
+    },
+  ],
 };
