@@ -20,12 +20,17 @@ module.exports = {
       registryUrls: ['https://npm.pkg.github.com'],
     },
   ],
-  hostRules: [
-    {
-      hostType: 'npm',
-      matchHost: 'https://npm.pkg.github.com',
-      authType: 'Bearer',
-      token: npmRegistryToken,
-    },
-  ],
+  // CI validator では env var 無しで走るため、token 未設定時は
+  // hostRules を空にしてバリデーションを通す。本番 workflow では
+  // RENOVATE_NPM_REGISTRY_TOKEN が必ず注入されるので空にはならない。
+  hostRules: npmRegistryToken
+    ? [
+        {
+          hostType: 'npm',
+          matchHost: 'https://npm.pkg.github.com',
+          authType: 'Bearer',
+          token: npmRegistryToken,
+        },
+      ]
+    : [],
 };
